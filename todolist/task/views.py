@@ -23,7 +23,7 @@ class TaskView(View):
             return redirect("login")  # Redirect to login page
 
         task = Task.objects.filter(user=request.user)  # ✅ Safe way to filter tasks
-        return render(request, "task/tasks.html", {"tasks": task})
+        return render(request, "task/tasks.html", locals())
     
 class TaskDetailView(View):
     def get(self, request,pk):
