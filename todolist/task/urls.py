@@ -12,7 +12,7 @@ from . forms import LoginForm, MyPasswordChangeForm, MyPasswordResetForm, MySetP
 
 urlpatterns = [
     path('home/', home),
-    path('task/', TaskView.as_view(), name='task'),
+    path('', TaskView.as_view(), name='task'),
     path('addtask/', TaskAddView.as_view(), name='addtask'),
     path('taskdetails/<int:pk>', TaskDetailView.as_view(), name='taskdetails'),
     path('taskupdate/<int:pk>', TaskUpdateView.as_view(), name='taskupdate'),
