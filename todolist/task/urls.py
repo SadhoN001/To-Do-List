@@ -24,6 +24,7 @@ urlpatterns = [
     path('delete-profile/<int:pk>/',DeleteCustomerProfileView.as_view(), name='delete-profile'),
     
     #Authentication part
+    path('accounts/login/',auth_view.LoginView.as_view(template_name='task/login.html', authentication_form=LoginForm),name='login'),
     path('login/',auth_view.LoginView.as_view(template_name='task/login.html', authentication_form=LoginForm),name='login'),
     path('logout/', auth_view.LogoutView.as_view(next_page= 'login'), name='logout'),
     path('registration/', CustomerRegistrationView.as_view(), name='registration'),
