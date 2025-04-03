@@ -1,22 +1,29 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from . models import Task, Customer
 from . forms import TaskForm, CustomRegistrationForm, CreateCustomerProfileForm
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView 
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db import IntegrityError
+
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 def home(request):
     return render(request, 'task/base.html') 
 
+@method_decorator(login_required, name="dispatch")
 class TaskView(View):
     def get(self, request):
-        # customer= Customer.objects.filter(user= request.user)
-        task= Task.objects.filter(user=request.user)
-        return render(request, 'task/tasks.html', locals())
+        # Ensure only logged-in users can access tasks
+        if not request.user.is_authenticated:
+            return redirect("login")  # Redirect to login page
+
+        task = Task.objects.filter(user=request.user)  # ✅ Safe way to filter tasks
+        return render(request, "task/tasks.html", {"tasks": task})
     
 class TaskDetailView(View):
     def get(self, request,pk):
