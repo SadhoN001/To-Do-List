@@ -31,6 +31,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500","https://SadhoN001.github.io",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+'https://to-do-list-31tc.onrender.com',
+]
 
 # Application definition
 
