@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>
+        {% block title %}
+            Home
+        {% endblock title %}
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen flex flex-col bg-gray-100">
+
+    <!-- Navbar (Fixed at the top) -->
+    <header class="bg-blue-700 text-white p-4 shadow-md fixed top-0 left-0 w-full z-10">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'task' %}" class="text-2xl font-bold">📝 To-Do List</a>
+            {% else %}
+                <a href="#" class="text-2xl font-bold">📝 To-Do List</a>
+            {% endif %}
+
+            <button id="menuToggle" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            {% if request.user.is_authenticated %}
+            <nav id="navMenu" class="hidden md:flex space-x-4 items-center">
+                <a href="{% url 'addtask' %}" class="">Add Tasks</a>
+                <a href="{% url 'task' %}" class="">Tasks</a>
+                <div class="relative">
+                    <button id="userDropdownBtn" class="px-4 py-2 rounded-lg flex items-center">
+                        <span class="mr-2"> {{request.user}}</span>
+                    </button>
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg hidden">
+                        
+                       
+                        <a href="{% url 'profile' %}" class="block px-4 py-2 hover:bg-gray-300 text-gray-700">Profile</a>
+                        <a href="{% url 'passwordchange' %}" class="block px-4 py-2 hover:bg-gray-300 text-gray-700">Change Password</a>
+                        
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                             <button class="block  w-full text-left px-4 py-2 hover:bg-gray-300 text-red-600">Logout</button>
+                        </form>
+                        
+                    </div>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="">Login</a>
+                <a href="{% url 'registration' %}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-200">Register</a>
+            </nav>
+            {% endif %}
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden flex flex-col bg-blue-600 text-white p-4">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'addtask' %}" class="py-2 border-b border-blue-500">Add Tasks</a>
+                <a href="{% url 'task' %}" class="py-2 border-b border-blue-500">Tasks</a>
+                <a href="{% url 'profile' %}" class="py-2">Profile</a>
+                <a href="{% url 'passwordchange' %}" class="py-2">Change Password</a>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="py-2 text-red-400">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="py-2 border-b border-blue-500">Login</a>
+                <a href="{% url 'registration' %}" class="py-2 border-b border-blue-500">Register</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper (Ensures footer sticks to bottom) -->
+    <main class="flex-grow pt-20 max-w-6xl mx-auto p-6">
+        {% block main-content %}
+        {% endblock main-content %}
+    </main>
+
+    <!-- Footer (Now properly sticks to bottom) -->
+    <footer class="bg-blue-700 text-white text-center p-4">
+        <p>&copy; 2025 To-Do List. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const userDropdownBtn = document.getElementById("userDropdownBtn");
+            const userDropdown = document.getElementById("userDropdown");
+            const menuToggle = document.getElementById("menuToggle");
+            const mobileMenu = document.getElementById("mobileMenu");
+
+            userDropdownBtn.addEventListener("click", function (event) {
+                event.stopPropagation();
+                userDropdown.classList.toggle("hidden");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!userDropdown.contains(event.target) && !userDropdownBtn.contains(event.target)) {
+                    userDropdown.classList.add("hidden");
+                }
+            });
+
+            menuToggle.addEventListener("click", function () {
+                mobileMenu.classList.toggle("hidden");
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                    mobileMenu.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

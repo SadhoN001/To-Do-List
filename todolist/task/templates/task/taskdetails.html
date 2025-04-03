@@ -1,0 +1,55 @@
+{% extends 'task/base.html' %}
+{% load static %}
+
+
+{% block title %}
+   Task Details
+{% endblock title %}
+
+
+{% block main-content %}
+<div class="bg-white p-6 rounded-lg shadow-md border">
+    <!-- Task Title -->
+    <h2 class="text-xl font-semibold text-gray-800">{{ task.title }}</h2>
+
+    <!-- Task Description -->
+    <p class="text-gray-600 mt-2">{{ task.description }}</p>
+    <h3 class="mt-4 font-bold">Time: <span class="text-red-500">{{task.task_date}}</span> </h3>
+    <!-- Completed Status -->
+    <span class="inline-block px-3 py-1 mt-3 rounded-full text-white 
+                {% if task.completed %} bg-green-500 {% else %} bg-red-500 {% endif %}">
+        {% if task.completed %}
+            ✅ Completed
+        {% else %}
+        ⏳ Pending
+        {% endif %}
+    </span>
+
+    <!-- Special Box: Created and Updated -->
+    <div class="mt-4 border-t pt-4">
+        <div class="flex justify-between text-sm ">
+            <div class="font-semibold">Created:</div>
+            <div>{{ task.created_at }}</div>
+        </div>
+        <div class="flex justify-between text-sm mt-2">
+            <div class="font-semibold">Updated:</div>
+            <div>{{ task.updated_at }}</div>
+        </div>
+    </div>
+    <div class="mt-6 flex justify-between items-center">
+        <!-- Update Task Button (Left) -->
+        <a href="{% url 'taskupdate' task.id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            Update Task
+        </a>
+    
+        <!-- Delete Task Button (Right) -->
+        <a href="{% url 'taskdelete' task.id %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            Delete Task
+        </a>
+    </div>
+    
+</div>
+
+{% endblock main-content %}
+    
+{% url 'taskupdate' task.id %}
